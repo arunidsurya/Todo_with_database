@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/get-todo",getTodo);
 router.post("/add-todo",createTodo);
-router.post("/edit-todo/:id",editTodo);
+router.put("/edit-todo/:id",editTodo);
 router.put("/todo-status-change/:id", todoStatusChange);
 router.delete("/delete-todo/:id",deleteTodo)
 

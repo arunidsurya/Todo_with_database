@@ -3,7 +3,7 @@ import { Todo } from "../model";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "./styles.css";
-import { handleDeleteTodo } from "./sevices/api/Api";
+import { handleDeleteTodo, handleEditTodo, handleStatusChange } from "./sevices/api/Api";
 
 type Props = {
   todo: Todo;
@@ -15,12 +15,17 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
-  const handleDone = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo._id === id ? { ...todo, isDone: !todo.isDone } : todo
-      )
-    );
+  const handleDone = async(id: number) => {
+    console.log("called")
+      try {
+        const res = await handleStatusChange(id)
+        if(res?.data.success){
+          let updatedTodo = res.data.todo;
+          setTodos((prev)=> prev.map((item)=> item._id === updatedTodo._id ? {...item,isDone: updatedTodo.isDone}:item))
+        }
+      } catch (error) {
+        
+      }
   };
 
   const handleDelete = async(id: number) => {
@@ -36,14 +41,27 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
 
   };
 
-  const handleEdit = (e: React.FormEvent, id: number) => {
-    e.preventDefault();
+const handleEdit = async (e: React.FormEvent, id: number) => {
+  e.preventDefault();
+  try {
+    const res = await handleEditTodo(id, editTodo);
+    if (res?.data.success) {
+      const updatedTodo = res.data.savedTodo;
+      setTodos((prev) =>
+        prev.map((item) =>
+          item._id === updatedTodo._id
+            ? { ...item, todo: updatedTodo.todo }
+            : item
+        )
+      );
+      setEdit(false);
+      setEditTodo(""); 
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    setTodos(
-      todos.map((todo) => (todo._id === id ? { ...todo, todo: editTodo } : todo))
-    );
-    setEdit(false);
-  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 

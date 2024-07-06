@@ -20,8 +20,21 @@ export const handleAddTodo = async(todo:string)=>{
 }
 export const handleDeleteTodo = async (id: number) => {
   try {
-    console.log(`{todoRoutes.deleteTodo}/${id}`);
     const res = Api.delete(`${todoRoutes.deleteTodo}/${id}`);
+    return res;
+  } catch (error) {}
+};
+
+export const handleEditTodo = async (id: number,todo:string) => {
+  try {
+    const res = Api.put(`${todoRoutes.editTodo}/${id}`,{todo});
+    return res;
+  } catch (error) {}
+};
+
+export const handleStatusChange = async (id: number) => {
+  try {
+    const res = Api.put(`${todoRoutes.todoStatusChange}/${id}`);
     return res;
   } catch (error) {}
 };

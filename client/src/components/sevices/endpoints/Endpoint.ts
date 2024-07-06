@@ -3,7 +3,7 @@ const todoRoutes = {
   addTodo: "/add-todo",
   editTodo: "/edit-todo",
   todoStatusChange: "/todo-status-change",
-  deleteTodo:"/delete-todo"
+  deleteTodo: "/delete-todo",
 };
 
 export default todoRoutes;

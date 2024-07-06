@@ -63,12 +63,12 @@ export const editTodo = async (req, res) => {
     if (savedTodo) {
       savedTodo.todo = todo;
 
-      await todo.save();
+      await savedTodo.save();
 
       return res.json({
         success: true,
         message: "Todo edited successfully",
-        todo,
+        savedTodo,
       });
     } else {
       return res.send({
