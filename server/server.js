@@ -1,20 +1,32 @@
-const express = require('express');
+import express from "express";
+import dotenv from "dotenv";
+import connectDb from "./src/config/dbConfig.js";
+import todoRoute from "./src/routes/todoRoute.js";
+import cors from "cors";
 
-
-
+dotenv.config();
 
 const app = express();
-
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json())
-app.use(express.urlencoded({extended:true}));
+connectDb();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-app.get("/",(req,res)=>{
-    res.send("This is server")
+app.get("/", (req, res) => {
+  console.log("reached Server");
+  res.send("this is server");
 });
 
-app.listen(PORT,()=>{
-    console.log(`server is running on port ${PORT}`)
-})
+app.use("/api/v1", todoRoute);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
