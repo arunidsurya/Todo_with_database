@@ -18,11 +18,11 @@ export const getTodo = async (req, res) => {
       });
     }
   } catch (error) {
-        console.log(error);
-        return res.status(500).send({
-          success: false,
-          message: "Internal Server Error",
-        });
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
@@ -45,18 +45,18 @@ export const createTodo = async (req, res) => {
       });
     }
   } catch (error) {
-       console.log(error);
-       return res.status(500).send({
-         success: false,
-         message: "Internal Server Error",
-       });
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
 export const editTodo = async (req, res) => {
   try {
     const id = req.params.id;
-    const {todo } = req.body;
+    const { todo } = req.body;
 
     const savedTodo = await todoModel.findById(id);
 
@@ -85,10 +85,9 @@ export const editTodo = async (req, res) => {
   }
 };
 
-
 export const todoStatusChange = async (req, res) => {
   try {
-    const  id  = req.params.id;
+    const id = req.params.id;
 
     const todo = await todoModel.findById(id);
 
@@ -119,11 +118,11 @@ export const todoStatusChange = async (req, res) => {
 
 export const deleteTodo = async (req, res) => {
   try {
-        const id = req.params.id;
+    const id = req.params.id;
 
     const todo = await todoModel.findByIdAndDelete(id);
 
-    console.log(todo)
+    console.log(todo);
 
     if (todo) {
       return res.json({
@@ -145,4 +144,3 @@ export const deleteTodo = async (req, res) => {
     });
   }
 };
-

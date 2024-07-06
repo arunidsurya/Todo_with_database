@@ -3,12 +3,13 @@ import "./App.css";
 import InputField from "./components/InputField";
 import { Todo } from "./model";
 import TodoList from "./components/TodoList";
-import axios from "axios";
 import { handleAddTodo, handleGetTodo } from "./components/sevices/api/Api";
+import axios from "axios";
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false); // Corrected type to boolean
 
   useEffect(() => {
     async function getTodo() {
@@ -28,11 +29,8 @@ const App: React.FC = () => {
 
     if (todo) {
       try {
-        const res = await handleAddTodo(todo)
-        setTodos((prev) => [
-          ...prev,
-          res?.data.newTodo, 
-        ]);
+        const res = await handleAddTodo(todo);
+        setTodos((prev) => [...prev, res?.data.newTodo]);
         setTodo("");
       } catch (err) {
         console.log(err);
@@ -40,16 +38,44 @@ const App: React.FC = () => {
     }
   };
 
+  const handleActiveClick = () => {
+    setIsCompleted(false);
+  };
+
+  const handleCompletedClick = () => {
+    setIsCompleted(true);
+  };
+
+  // Filter todos based on isCompleted state
+  const filteredTodos = todos.filter((todo) => {
+    if (isCompleted) {
+      return todo.isDone;
+    } else {
+      return !todo.isDone;
+    }
+  });
+
   return (
     <div className="App">
       <span className="heading">Taskify</span>
       <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
       <div>
-        <button  className="button1">Active</button>
-        <button className="button2">completed</button>
+        <button
+          className="button1"
+          style={{ border: !isCompleted ? "2px solid yellow" : "none" }}
+          onClick={handleActiveClick}
+        >
+          Active
+        </button>
+        <button
+          className="button2"
+          style={{ border: isCompleted ? "2px solid yellow" : "none" }}
+          onClick={handleCompletedClick}
+        >
+          Completed
+        </button>
       </div>
-
-      <TodoList todos={todos} setTodos={setTodos} />
+      <TodoList todos={filteredTodos} setTodos={setTodos} />
     </div>
   );
 };
