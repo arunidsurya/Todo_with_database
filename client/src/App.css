@@ -19,6 +19,29 @@
   text-align: center;
 }
 
+.button1{
+  width:200px;
+  height:40px;
+  background-color:rgb(55, 167, 55);
+  margin:20px;
+  color:white;
+  border-radius:10px;
+  border:none;
+  font-weight: bolder;
+  font-size: 20px;
+}
+.button2{
+  width:200px;
+  height:40px;
+  background-color:rgb(32, 72, 158);
+  margin:20px;
+  color:white;
+  border-radius:10px;
+  border:none;
+  font-weight: bolder;
+  font-size: 20px;
+}
+
 @media (max-width: 800px) {
   .heading {
     margin: 15px 0;

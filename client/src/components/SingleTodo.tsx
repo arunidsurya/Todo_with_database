@@ -3,6 +3,7 @@ import { Todo } from "../model";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "./styles.css";
+import { handleDeleteTodo } from "./sevices/api/Api";
 
 type Props = {
   todo: Todo;
@@ -17,20 +18,29 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
   const handleDone = (id: number) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+        todo._id === id ? { ...todo, isDone: !todo.isDone } : todo
       )
     );
   };
 
-  const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDelete = async(id: number) => {
+    try {
+          const res = await handleDeleteTodo(id);
+          if (res) {
+            let receivedId = res.data.todo._id;
+            setTodos((prev) => prev.filter((item) => item._id !== receivedId));
+          }
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   const handleEdit = (e: React.FormEvent, id: number) => {
     e.preventDefault();
 
     setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+      todos.map((todo) => (todo._id === id ? { ...todo, todo: editTodo } : todo))
     );
     setEdit(false);
   };
@@ -42,7 +52,7 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
   }, [edit]);
 
   return (
-    <form className="todos_single" onSubmit={(e) => handleEdit(e, todo.id)}>
+    <form className="todos_single" onSubmit={(e) => handleEdit(e, todo._id)}>
       {edit ? (
         <input
           ref={inputRef}
@@ -67,10 +77,10 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
         >
           <AiFillEdit />
         </span>
-        <span className="icon" onClick={() => handleDelete(todo.id)}>
+        <span className="icon" onClick={() => handleDelete(todo._id)}>
           <AiFillDelete />
         </span>
-        <span className="icon" onClick={() => handleDone(todo.id)}>
+        <span className="icon" onClick={() => handleDone(todo._id)}>
           <MdDone />
         </span>
       </div>

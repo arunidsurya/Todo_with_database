@@ -4,6 +4,7 @@ import InputField from "./components/InputField";
 import { Todo } from "./model";
 import TodoList from "./components/TodoList";
 import axios from "axios";
+import { handleAddTodo, handleGetTodo } from "./components/sevices/api/Api";
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
@@ -12,10 +13,8 @@ const App: React.FC = () => {
   useEffect(() => {
     async function getTodo() {
       try {
-        const res = await axios.get("http://localhost:5000/api/v1/get-todo", {
-          withCredentials: true,
-        });
-        setTodos(res.data.todos);
+        const res = await handleGetTodo();
+        setTodos(res?.data.todos);
       } catch (err) {
         console.log(err);
       }
@@ -29,18 +28,12 @@ const App: React.FC = () => {
 
     if (todo) {
       try {
-        const res = await axios.post(
-          "http://localhost:5000/api/v1/add-todo",
-          { todo },
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await handleAddTodo(todo)
         setTodos((prev) => [
           ...prev,
-          res.data.newTodo, // Assuming server returns the new todo item as res.data.todo
+          res?.data.newTodo, 
         ]);
-        setTodo(""); // Clear the input field after adding
+        setTodo("");
       } catch (err) {
         console.log(err);
       }
@@ -51,6 +44,11 @@ const App: React.FC = () => {
     <div className="App">
       <span className="heading">Taskify</span>
       <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
+      <div>
+        <button  className="button1">Active</button>
+        <button className="button2">completed</button>
+      </div>
+
       <TodoList todos={todos} setTodos={setTodos} />
     </div>
   );
