@@ -9,13 +9,13 @@ import axios from "axios";
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [isCompleted, setIsCompleted] = useState<boolean>(false); // Corrected type to boolean
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   useEffect(() => {
     async function getTodo() {
       try {
         const res = await handleGetTodo();
-        setTodos(res?.data.todos);
+        setTodos(res?.data.todos || []);
       } catch (err) {
         console.log(err);
       }
@@ -46,14 +46,14 @@ const App: React.FC = () => {
     setIsCompleted(true);
   };
 
-  // Filter todos based on isCompleted state
-  const filteredTodos = todos.filter((todo) => {
-    if (isCompleted) {
-      return todo.isDone;
-    } else {
-      return !todo.isDone;
-    }
-  });
+  const filteredTodos =
+    todos?.filter((todo) => {
+      if (isCompleted) {
+        return todo.isDone;
+      } else {
+        return !todo.isDone;
+      }
+    }) || [];
 
   return (
     <div className="App">
@@ -75,7 +75,11 @@ const App: React.FC = () => {
           Completed
         </button>
       </div>
-      <TodoList todos={filteredTodos} setTodos={setTodos} />
+      {filteredTodos.length > 0 ? (
+        <TodoList todos={filteredTodos} setTodos={setTodos} />
+      ) : (
+        <p className="toto-empty">No todos available. Please add a todo.</p>
+      )}
     </div>
   );
 };
